@@ -76,15 +76,15 @@
 			 */
 
 			.food {
-				border-top: 10px solid /* color */;
+				border-top: 10px solid #E69F00;
 			}
 
 			.transpo {
-				border-top: 10px solid /* color */;
+				border-top: 10px solid #56B4E9;
 			}
 
 			.bills {
-				border-top: 10px solid /* color */;
+				border-top: 10px solid #009E73;
 			}
 
 			.expenseItem {
@@ -120,6 +120,7 @@
 
 		</style>
 		<!-- IMPORT JQUERY (from CDN or download it) -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 		<script type="text/javascript">
 			// Insert your javascript/jquery code here
 			
@@ -134,9 +135,56 @@
 				var formattedDate = today.getFullYear().toString() + '-' + (today.getMonth() + 1).toString().padStart(2, 0) + '-' + today.getDate().toString().padStart(2, 0);
 
 				// Set the formattedDate value to the date input field's value
-
+				$("#date").val(formattedDate);
 
 				// Place all functions and validations here
+				var Expenses = [];
+				var totalAmount = 0;
+
+				function Expense(date, category, description, amount) {
+					this.date = date;
+					this.category = category;
+					this.description = description;
+					this.amount = parseFloat(amount);
+				}
+
+				// Functions to update view
+				function addToList(ExpenseObj) {
+					var htmlExpenseItem = $("<div class='expenseItem " + ExpenseObj.category + "'><div>");
+
+					htmlExpenseItem.appendTo("#list");
+					$("<span class='datecol'></span>").text(ExpenseObj.date).appendTo(htmlExpenseItem);
+					$("<span class='itemcol'></span>").text(ExpenseObj.description).appendTo(htmlExpenseItem);
+					$("<span class='amountcol'></span>").text(ExpenseObj.amount.toFixed(2)).appendTo(htmlExpenseItem);
+
+					$("#total").text(totalAmount.toFixed(2)); // update total view
+					clearForm(); // clear form for new entry
+				}
+
+				function clearForm() {
+					$("#date").val(formattedDate);
+					$("#category").prop("selectedIndex", 0);
+					$("#item").val('');
+					$("#amount").val('');
+				}
+
+				// Other functions
+				function addExpense() {
+					var date = $("#date").val();
+					var categ = $("#category").val();
+					var desc = $("#item").val();
+					var amt = parseFloat( $("#amount").val() ).toFixed(2);
+
+					var newExpense = new Expense(date, categ, desc, amt);
+					Expenses.push(newExpense);
+					totalAmount += newExpense.amount;
+					addToList(newExpense);
+				}
+
+				// Add onclick event to submit button
+				$("#submit").click(addExpense);
+
+				// TODO: Validations
 				
 			})
 		</script>
@@ -145,7 +193,7 @@
 	<body>
 		<div>
 			<h3>CCAPDEV - Mini Challenge 2</h3>
-			<p>Your name here</p>
+			<p>Posadas, Annika A.</p>
 		</div>
 		<div id="form">
 			
