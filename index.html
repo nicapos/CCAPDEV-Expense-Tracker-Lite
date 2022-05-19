@@ -165,6 +165,13 @@
 					$("#amount").val('');
 				}
 
+				function setListView(ArrExpenseObjs, total) {
+					$("#list").empty(); // clear list view first
+
+					ArrExpenseObjs.forEach(addToList);
+					$("#total").text(total.toFixed(2));
+				}
+
 				// Other functions
 				function addExpense() {
 					var date = $("#date").val();
@@ -178,10 +185,32 @@
 					addToList(newExpense);
 				}
 
+				function addAmt(total, expenseItem) { // for filterExpenses
+					return total + expenseItem.amount;
+				}
+
+				function filterExpenses() {
+					var selectedFilter = $("#filter").val();
+
+					if ( selectedFilter == "all" )
+						setListView(expenses, sum);
+					else {
+						var selectExpenses = expenses.filter(function (expItem) {
+							return expItem.category == selectedFilter;
+						});
+						var selectTotal = selectExpenses.reduce(addAmt, 0);
+						setListView(selectExpenses, selectTotal);
+					}
+				}
+
 				// Add onclick event to submit button
 				$("#submit").click(addExpense);
 
+				// Add onchance event for filter
+				$('#filter').change(filterExpenses);
+
 				// TODO: Validations
+				
 				
 			})
 		</script>
