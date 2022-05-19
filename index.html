@@ -138,9 +138,6 @@
 				$("#date").val(formattedDate);
 
 				// Place all functions and validations here
-				var Expenses = [];
-				var totalAmount = 0;
-
 				function Expense(date, category, description, amount) {
 					this.date = date;
 					this.category = category;
@@ -157,7 +154,7 @@
 					$("<span class='itemcol'></span>").text(ExpenseObj.description).appendTo(htmlExpenseItem);
 					$("<span class='amountcol'></span>").text(ExpenseObj.amount.toFixed(2)).appendTo(htmlExpenseItem);
 
-					$("#total").text(totalAmount.toFixed(2)); // update total view
+					$("#total").text(sum.toFixed(2)); // update total view
 					clearForm(); // clear form for new entry
 				}
 
@@ -176,8 +173,8 @@
 					var amt = parseFloat( $("#amount").val() ).toFixed(2);
 
 					var newExpense = new Expense(date, categ, desc, amt);
-					Expenses.push(newExpense);
-					totalAmount += newExpense.amount;
+					expenses.push(newExpense);
+					sum += newExpense.amount;
 					addToList(newExpense);
 				}
 
