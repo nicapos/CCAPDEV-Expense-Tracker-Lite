@@ -145,8 +145,8 @@
 					this.amount = parseFloat(amount);
 				}
 
-				// Functions to update view
-				function addToList(ExpenseObj) {
+				/* View-related Functions */
+				function addToListView(ExpenseObj) {
 					var htmlExpenseItem = $("<div class='expenseItem " + ExpenseObj.category + "'><div>");
 
 					htmlExpenseItem.appendTo("#list");
@@ -168,11 +168,11 @@
 				function setListView(ArrExpenseObjs, total) {
 					$("#list").empty(); // clear list view first
 
-					ArrExpenseObjs.forEach(addToList);
+					ArrExpenseObjs.forEach(addToListView);
 					$("#total").text(total.toFixed(2));
 				}
 
-				// Other functions
+				/* Model-related Functions */
 				function addExpense() {
 					var date = $("#date").val();
 					var categ = $("#category").val();
@@ -182,7 +182,7 @@
 					var newExpense = new Expense(date, categ, desc, amt);
 					expenses.push(newExpense);
 					sum += newExpense.amount;
-					addToList(newExpense);
+					addToListView(newExpense);
 				}
 
 				function addAmt(total, expenseItem) { // for filterExpenses
@@ -203,15 +203,10 @@
 					}
 				}
 
-				// Add onclick event to submit button
-				$("#submit").click(addExpense);
-
-				// Add onchance event for filter
-				$('#filter').change(filterExpenses);
+				$("#submit").click(addExpense); // Add onclick event to submit button
+				$('#filter').change(filterExpenses); // Add onchance event for filter
 
 				// TODO: Validations
-				
-				
 			})
 		</script>
 	</head>
