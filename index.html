@@ -147,7 +147,7 @@
 
 				/* View-related Functions */
 				function addToListView(ExpenseObj) {
-					var htmlExpenseItem = $("<div class='expenseItem " + ExpenseObj.category + "'><div>");
+					let htmlExpenseItem = $("<div class='expenseItem " + ExpenseObj.category + "'><div>");
 
 					htmlExpenseItem.appendTo("#list");
 					$("<span class='datecol'></span>").text(ExpenseObj.date).appendTo(htmlExpenseItem);
@@ -172,17 +172,48 @@
 					$("#total").text(total.toFixed(2));
 				}
 
-				/* Model-related Functions */
-				function addExpense() {
-					var date = $("#date").val();
-					var categ = $("#category").val();
-					var desc = $("#item").val();
-					var amt = parseFloat( $("#amount").val() ).toFixed(2);
+				function clearFormError() {
+					$("#item").css({"border-color": "#DDDDDD"});
+					$("#amount").css({"border-color": "#DDDDDD"});
+					$("#error").text('');
+				}
 
-					var newExpense = new Expense(date, categ, desc, amt);
-					expenses.push(newExpense);
-					sum += newExpense.amount;
-					addToListView(newExpense);
+				function showFormError(missingFieldId) {
+					clearFormError(); // clear previous errors, if any
+
+					$("#" + missingFieldId).css({"border-color": "#B00000"});
+					if (missingFieldId == "item")
+						$("#error").text("Please enter a description for the expense.");
+					else if (missingFieldId == "amount")
+						$("#error").text("Please enter an amount");
+				}
+
+				/* Model-related Functions */
+				function isValidEntry() {
+					if ( !$("#item").val() ) {
+						showFormError("item");
+						return false;
+					} else if ( !$("#amount").val() ) {
+						showFormError("amount");
+						return false;
+					} else {
+						clearFormError();
+						return true;
+					}
+				}
+
+				function addExpense() {
+					if ( isValidEntry() ) {
+						let date = $("#date").val();
+						let categ = $("#category").val();
+						let desc = $("#item").val();
+						let amt = parseFloat( $("#amount").val() ).toFixed(2);
+
+						let newExpense = new Expense(date, categ, desc, amt);
+						expenses.push(newExpense);
+						sum += newExpense.amount;
+						addToListView(newExpense);		
+					}
 				}
 
 				function addAmt(total, expenseItem) { // for filterExpenses
@@ -190,23 +221,21 @@
 				}
 
 				function filterExpenses() {
-					var selectedFilter = $("#filter").val();
+					let selectedFilter = $("#filter").val();
 
 					if ( selectedFilter == "all" )
 						setListView(expenses, sum);
 					else {
-						var selectExpenses = expenses.filter(function (expItem) {
+						let selectExpenses = expenses.filter(function (expItem) {
 							return expItem.category == selectedFilter;
 						});
-						var selectTotal = selectExpenses.reduce(addAmt, 0);
+						let selectTotal = selectExpenses.reduce(addAmt, 0);
 						setListView(selectExpenses, selectTotal);
 					}
 				}
 
 				$("#submit").click(addExpense); // Add onclick event to submit button
 				$('#filter').change(filterExpenses); // Add onchance event for filter
-
-				// TODO: Validations
 			})
 		</script>
 	</head>
